@@ -22,8 +22,7 @@ import javax.sql.DataSource;
 public class SecurityConfig {
 
     private PasswordEncoder passwordEncoder;
-
-    private UserDetailServiceImpl userDetailServiceImpl;
+    //private UserDetailServiceImpl userDetailServiceImpl;
 
 
 
@@ -32,25 +31,25 @@ public class SecurityConfig {
         return new JdbcUserDetailsManager(dataSource);
     }
 
-    //@Bean
+    @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
         return new InMemoryUserDetailsManager(
-                User.withUsername("user1").password(passwordEncoder.encode("1234")).roles("USER").build(),
-                User.withUsername("user2").password(passwordEncoder.encode("1234")).roles("USER").build(),
-                User.withUsername("admin").password(passwordEncoder.encode("1234")).roles("USER","ADMIN").build()
+                User.withUsername("user1").password(passwordEncoder.encode("1234")).authorities("USER").build(),
+                User.withUsername("user2").password(passwordEncoder.encode("1234")).authorities("USER").build(),
+                User.withUsername("admin").password(passwordEncoder.encode("1234")).authorities("USER","ADMIN").build()
         );
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.formLogin().loginPage("/login").defaultSuccessUrl("/ ").permitAll();
-        httpSecurity.rememberMe();
+        //httpSecurity.rememberMe();
         httpSecurity.authorizeHttpRequests().requestMatchers("/webjars/**","/h2-console/**").permitAll();
-//        httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasRole("USER");
-//        httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasRole("ADMIN");
+//        httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasAuthority("USER");
+//        httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasAuthority("ADMIN");
         httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
         httpSecurity.exceptionHandling().accessDeniedPage("/notAuthorized");
-        httpSecurity.userDetailsService(userDetailServiceImpl);
+       // httpSecurity.userDetailsService(userDetailServiceImpl);
         return httpSecurity.build();
     }
 }

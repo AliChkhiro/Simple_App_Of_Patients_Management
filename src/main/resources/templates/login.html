@@ -12,6 +12,13 @@
             <div class="card">
                 <div class="card-header">Authentication</div>
                 <div class="card-body">
+                    <div th:if="${param.error}">
+                        <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+                    </div>
+
+                    <div th:if="${param.logout}">
+                        <p class="text-warning"> You have been logged out!</p>
+                    </div>
                     <form method="post" th:action="@{/login}">
                         <div class="mb-3 mt-3">
                             <label for="username" class="form-label">Username:</label>
